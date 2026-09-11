@@ -1,0 +1,113 @@
+{
+  "name": "minimal",
+  "description": "Quiet, type-led layout with rules instead of colour blocks",
+  "card": {
+    "width_mm": 90.0,
+    "height_mm": 140.0,
+    "bleed_mm": 3.0,
+    "calibration_mm": 3.0
+  },
+  "fonts": {},
+  "front": {
+    "background": "#FFFFFF",
+    "elements": [
+      {
+        "type": "text",
+        "x_mm": 3,
+        "y_mm": 104,
+        "w_mm": 84,
+        "text": "{my_call}",
+        "size_pt": 34,
+        "color": "#12161C",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "line",
+        "color": "#12161C",
+        "border_width": 0.5,
+        "x1_mm": 20,
+        "y1_mm": 100,
+        "x2_mm": 70,
+        "y2_mm": 100
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 90,
+        "w_mm": 78,
+        "text": "{my_qth}   GRID {my_grid}",
+        "color": "#6B7280",
+        "align": "center"
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 56,
+        "w_mm": 78,
+        "text": "QSL",
+        "size_pt": 24,
+        "color": "#6B7280",
+        "align": "center"
+      }
+    ]
+  },
+  "back": {
+    "background": "#FFFFFF",
+    "elements": [
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 126,
+        "w_mm": 78,
+        "text": "{call}",
+        "size_pt": 16,
+        "color": "#12161C",
+        "bold": true
+      },
+      {
+        "type": "line",
+        "color": "#6B7280",
+        "border_width": 0.3,
+        "x1_mm": 6,
+        "y1_mm": 124,
+        "x2_mm": 84,
+        "y2_mm": 124
+      },
+      {
+        "type": "qso_rows",
+        "x_mm": 6,
+        "y_mm": 80,
+        "w_mm": 78,
+        "size_pt": 8.5,
+        "color": "#12161C",
+        "fields": [
+          "qso_date",
+          "time_on",
+          "band",
+          "mode",
+          "rst_sent",
+          "rst_rcvd"
+        ],
+        "row_height_mm": 7.5
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 62,
+        "w_mm": 78,
+        "text": "TNX / 73",
+        "color": "#12161C"
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 14,
+        "w_mm": 78,
+        "text": "{my_call}  {my_name}",
+        "size_pt": 8,
+        "color": "#6B7280"
+      }
+    ]
+  }
+}

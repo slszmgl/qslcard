@@ -1,0 +1,158 @@
+{
+  "name": "classic",
+  "description": "Bold header band with a large callsign and a QSO table on the back",
+  "card": {
+    "width_mm": 90.0,
+    "height_mm": 140.0,
+    "bleed_mm": 3.0,
+    "calibration_mm": 3.0
+  },
+  "fonts": {},
+  "front": {
+    "background": "#FFFFFF",
+    "elements": [
+      {
+        "type": "rect",
+        "x_mm": -3,
+        "y_mm": 112,
+        "w_mm": 96,
+        "h_mm": 31,
+        "fill": "#0B3D91"
+      },
+      {
+        "type": "text",
+        "x_mm": 4,
+        "y_mm": 124,
+        "w_mm": 82,
+        "text": "{my_call}",
+        "size_pt": 30,
+        "color": "#FFFFFF",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "x_mm": 4,
+        "y_mm": 114,
+        "w_mm": 82,
+        "text": "{my_qth}",
+        "size_pt": 11,
+        "color": "#D8E2F5",
+        "align": "center"
+      },
+      {
+        "type": "text",
+        "x_mm": 4,
+        "y_mm": 62,
+        "w_mm": 82,
+        "text": "QSL",
+        "size_pt": 46,
+        "color": "#C9D3E4",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 50,
+        "w_mm": 78,
+        "text": "Confirming our QSO with {call}",
+        "size_pt": 11,
+        "color": "#12161C",
+        "align": "center"
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 6,
+        "w_mm": 78,
+        "text": "CQ {cqz}  ITU {ituz}  GRID {my_grid}",
+        "size_pt": 9,
+        "color": "#6B7280",
+        "align": "center"
+      }
+    ]
+  },
+  "back": {
+    "background": "#FFFFFF",
+    "elements": [
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 128,
+        "w_mm": 78,
+        "text": "CONFIRMING OUR QSO",
+        "size_pt": 12,
+        "color": "#0B3D91",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "line",
+        "color": "#0B3D91",
+        "border_width": 0.4,
+        "x1_mm": 6,
+        "y1_mm": 126,
+        "x2_mm": 84,
+        "y2_mm": 126
+      },
+      {
+        "type": "qso_rows",
+        "x_mm": 6,
+        "y_mm": 74,
+        "w_mm": 78,
+        "size_pt": 9,
+        "color": "#12161C",
+        "fields": [
+          "qso_date",
+          "time_on",
+          "band",
+          "mode",
+          "rst_sent",
+          "rst_rcvd"
+        ],
+        "row_height_mm": 8
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 58,
+        "w_mm": 78,
+        "text": "TNX FOR THE QSO  /  73",
+        "size_pt": 11,
+        "color": "#12161C",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 40,
+        "w_mm": 78,
+        "text": "{my_name}  {my_call}",
+        "color": "#12161C",
+        "align": "center"
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 26,
+        "w_mm": 78,
+        "text": "{my_address}",
+        "size_pt": 9,
+        "color": "#12161C",
+        "align": "center"
+      },
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 10,
+        "w_mm": 78,
+        "text": "PSE QSL VIA {qsl_via}",
+        "size_pt": 9,
+        "color": "#6B7280",
+        "align": "center"
+      }
+    ]
+  }
+}

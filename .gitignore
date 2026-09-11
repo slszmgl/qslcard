@@ -1,0 +1,33 @@
+# Virtual environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.deps/
+
+# Build artefacts and local data
+build/
+dist/
+data/
+out/
+*.log
+build-exe.log
+
+# Local secrets and databases
+*.db
+*.db-shm
+*.db-wal
+vault.json
+
+# Test scratch
+.test-cache-*/
+
+# Local publishing helpers (contain no secrets, but are machine-specific)
+publish.ps1
+push.ps1
+
+# Unrelated trees that live beside this project in the author's workspace
+deepseek-harness/
+tools/

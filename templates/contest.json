@@ -1,0 +1,105 @@
+{
+  "name": "contest",
+  "description": "Dense single-side layout for high volume bureau batches",
+  "card": {
+    "width_mm": 90.0,
+    "height_mm": 140.0,
+    "bleed_mm": 3.0,
+    "calibration_mm": 3.0
+  },
+  "fonts": {},
+  "front": {
+    "background": "#FFFFFF",
+    "elements": [
+      {
+        "type": "text",
+        "x_mm": 3,
+        "y_mm": 118,
+        "w_mm": 84,
+        "text": "{my_call}",
+        "size_pt": 26,
+        "color": "#12161C",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "line",
+        "color": "#12161C",
+        "border_width": 0.4,
+        "x1_mm": 3,
+        "y1_mm": 116,
+        "x2_mm": 87,
+        "y2_mm": 116
+      },
+      {
+        "type": "text",
+        "x_mm": 3,
+        "y_mm": 108,
+        "w_mm": 84,
+        "text": "CONFIRMING QSO WITH {call}",
+        "size_pt": 11,
+        "color": "#12161C",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "qso_rows",
+        "x_mm": 3,
+        "y_mm": 40,
+        "w_mm": 84,
+        "size_pt": 8,
+        "color": "#12161C",
+        "fields": [
+          "qso_date",
+          "time_on",
+          "band",
+          "mode",
+          "rst_sent",
+          "rst_rcvd"
+        ]
+      },
+      {
+        "type": "text",
+        "x_mm": 3,
+        "y_mm": 8,
+        "w_mm": 84,
+        "text": "TNX 73 DE {my_call}   PSE QSL VIA {qsl_via}",
+        "size_pt": 8,
+        "color": "#6B7280",
+        "align": "center"
+      }
+    ]
+  },
+  "back": {
+    "background": "#FFFFFF",
+    "elements": [
+      {
+        "type": "text",
+        "x_mm": 6,
+        "y_mm": 126,
+        "w_mm": 78,
+        "text": "QSL {my_call}",
+        "size_pt": 14,
+        "color": "#12161C",
+        "align": "center",
+        "bold": true
+      },
+      {
+        "type": "qso_rows",
+        "x_mm": 6,
+        "y_mm": 80,
+        "w_mm": 78,
+        "size_pt": 8,
+        "color": "#12161C",
+        "fields": [
+          "qso_date",
+          "time_on",
+          "band",
+          "mode",
+          "rst_sent",
+          "rst_rcvd"
+        ]
+      }
+    ]
+  }
+}

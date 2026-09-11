@@ -1,0 +1,4 @@
+# Extra requirements for building the Windows executables (see build_exe.ps1).
+-r requirements.txt
+pyinstaller>=6.10
+pillow>=10

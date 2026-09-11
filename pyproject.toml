@@ -1,0 +1,77 @@
+[project]
+name = "qslcard"
+version = "0.1.0"
+description = "Amateur radio QSO aggregation, QSL card dispatch tracking and print-ready card sheets"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "qslcard contributors" }]
+keywords = [
+    "amateur-radio",
+    "ham-radio",
+    "qsl",
+    "adif",
+    "lotw",
+    "qrz",
+    "dxcc",
+    "pdf",
+    "tkinter",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: X11 Applications",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: Chinese (Simplified)",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Communications :: Ham Radio",
+    "Topic :: Office/Business",
+    "Topic :: Printing",
+]
+dependencies = ["fpdf2>=2.7"]
+
+[project.urls]
+Changelog = "https://github.com/slszmgl/qslcard/releases"
+Issues = "https://github.com/slszmgl/qslcard/issues"
+Source = "https://github.com/slszmgl/qslcard"
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.10"]
+yaml = ["PyYAML>=6"]
+build = ["pyinstaller>=6.10"]
+
+[project.scripts]
+qslcard = "qslcard.cli:main"
+qslcard-gui = "qslcard.desktop:main"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["qslcard*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# Never let ruff wander into the DSH checkout, vendored tooling or the venv.
+extend-exclude = ["deepseek-harness", "tools", ".venv", "docs", "out"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true

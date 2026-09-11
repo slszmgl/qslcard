@@ -1,0 +1,64 @@
+{
+  "station": {
+    "callsign": "BG1XYZ",
+    "operator": "BG1XYZ",
+    "name": "Zhang San",
+    "grid": "PM95",
+    "qth": "Beijing, China",
+    "address": "Chaoyang District, Beijing, China",
+    "email": "bg1xyz@example.org",
+    "qsl_via": "BURO"
+  },
+  "print": {
+    "paper": "A4",
+    "preset": "home",
+    "duplex": true,
+    "bleed_mm": 3,
+    "gap_mm": 1,
+    "margin_mm": 2,
+    "dpi": 300,
+    "color": "RGB",
+    "card_width_mm": 90,
+    "card_height_mm": 140,
+    "calibration_lines": true,
+    "calibration_mm": 3,
+    "crop_marks": true
+  },
+  "sources": {
+    "adif": {
+      "paths": [
+        "samples"
+      ]
+    },
+    "qrz": {
+      "enabled": false
+    },
+    "hamqth": {
+      "enabled": false
+    },
+    "lotw": {
+      "tqsl_path": "",
+      "report_path": ""
+    },
+    "clublog": {
+      "enabled": false
+    },
+    "eqsl": {
+      "report_path": ""
+    }
+  },
+  "rules": {
+    "needs_card": {
+      "require_unconfirmed": true,
+      "require_unsent": true,
+      "limit": 0
+    }
+  },
+  "template": "classic",
+  "database": "data/qslcard.db",
+  "output_dir": "out",
+  "template_dir": "templates",
+  "vault_path": "data/vault.json",
+  "offline": true,
+  "language": "zh"
+}
