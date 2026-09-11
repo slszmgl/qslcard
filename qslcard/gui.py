@@ -761,8 +761,11 @@ class QslCardWindow:
         from .privacy import DEFAULT_ALLOWED_HOSTS
 
         vault = self.app.vault
-        backend = "-" if vault is None else vault.backend
-        count = 0 if vault is None else len(vault.load())
+        backend = "-" if vault is None else vault.backend_label()
+        try:
+            count = 0 if vault is None else len(vault.load())
+        except ValueError:
+            count = 0
         lines = [
             f"凭证后端：{backend}（仅本机，Windows 使用 DPAPI 加密）",
             f"已保存凭证：{count} 项",

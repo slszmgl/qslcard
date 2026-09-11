@@ -250,6 +250,17 @@ class CredentialVault:
         """True when the platform has no DPAPI and no password was supplied."""
         return self.master_password is None and not dpapi_available()
 
+    def backend_label(self) -> str:
+        """Non-raising description of where credentials live.
+
+        backend raises when a master password is required but not yet supplied,
+        which is exactly the state a privacy check runs in on Linux, so callers
+        that only want to report the situation must use this instead.
+        """
+        if self.master_password is not None:
+            return "chacha20"
+        return "dpapi" if dpapi_available() else "master-password-required"
+
     @property
     def backend(self) -> str:
         if self.master_password is None and dpapi_available():

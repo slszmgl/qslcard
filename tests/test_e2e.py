@@ -231,3 +231,29 @@ def imported_row(path) -> dict:
 
     with open(path, encoding="utf-8-sig", newline="") as handle:
         return next(csv.DictReader(handle))
+
+
+def test_privacy_selfcheck_works_without_dpapi_or_master_password(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    """Reproduces the Linux CI failure: no DPAPI and no master password.
+
+    The vault cannot be opened in that state, which used to crash the privacy
+    self-check instead of reporting the situation.
+    """
+    import qslcard.privacy as privacy
+
+    monkeypatch.setattr(privacy, "dpapi_available", lambda: False)
+    monkeypatch.delenv("QSLCARD_MASTER_PASSWORD", raising=False)
+    config = _prepare(tmp_path, monkeypatch)
+
+    assert main(["-c", str(config), "privacy"]) == 0
+    text = capsys.readouterr().out
+    assert "隐私自检" in text
+    assert "主口令" in text
+    assert "遥测：无" in text
+    assert "未在检查范围内发现凭证明文" in text
+
+    # The vault subcommand must explain the situation instead of raising.
+    assert main(["-c", str(config), "vault", "list"]) == 2
+    assert "主口令" in capsys.readouterr().out

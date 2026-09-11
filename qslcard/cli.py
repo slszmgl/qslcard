@@ -565,10 +565,21 @@ def cmd_db(app: App, args: argparse.Namespace) -> int:
     return 0
 
 
+BACKEND_LABELS = {
+    "dpapi": "DPAPI（Windows 本机加密）",
+    "chacha20": "ChaCha20+HMAC（主口令加密）",
+    "master-password-required": "需要主口令（本平台无 DPAPI），设置 QSLCARD_MASTER_PASSWORD 后可用",
+}
+
+
 def cmd_privacy(app: App, args: argparse.Namespace) -> int:
     secrets: dict[str, str] = {}
+    notes: list[str] = []
     if app.vault is not None:
-        secrets = {k: v for k, v in app.vault.load().items()}
+        try:
+            secrets = {k: v for k, v in app.vault.load().items()}
+        except ValueError as exc:
+            notes.append(f"凭证库暂时无法读取：{exc}")
     candidates: list[str] = list(args.paths)
     if not candidates:
         candidates = [
@@ -577,12 +588,19 @@ def cmd_privacy(app: App, args: argparse.Namespace) -> int:
             str(Path(app.config.database).parent),
         ]
     findings = audit_for_secrets(candidates, secrets)
+    backend = (
+        "-"
+        if app.vault is None
+        else BACKEND_LABELS.get(app.vault.backend_label(), app.vault.backend_label())
+    )
     print("隐私自检")
-    print(f"  凭证后端：{'-' if app.vault is None else app.vault.backend}")
+    print(f"  凭证后端：{backend}")
     print(f"  凭证数量：{len(secrets)}")
     print(f"  网络模式：{'离线' if (app.policy and app.policy.offline) else '在线（仅白名单）'}")
     print(f"  允许域名：{len(app.policy.allowed_hosts) if app.policy else 0}")
     print("  遥测：无")
+    for note in notes:
+        print(f"  提示：{note}")
     if findings:
         for finding in findings:
             print(f"  风险[{finding.severity}] {finding.path}: {finding.detail}")
@@ -594,6 +612,12 @@ def cmd_privacy(app: App, args: argparse.Namespace) -> int:
 def cmd_vault(app: App, args: argparse.Namespace) -> int:
     if app.vault is None:
         print("未配置凭证库")
+        return 2
+    if app.vault.needs_master_password():
+        print(
+            "本平台没有 DPAPI，凭证库需要主口令：请先设置环境变量 "
+            "QSLCARD_MASTER_PASSWORD，或在图形界面的「数据源与凭证」中解锁。"
+        )
         return 2
     if args.action == "set":
         value = args.value or (os.environ.get(args.from_env, "") if args.from_env else "")
