@@ -419,7 +419,7 @@ def _classic_dict() -> dict[str, Any]:
                 {
                     "type": "qso_rows",
                     "x_mm": 6,
-                    "y_mm": 74,
+                    "y_mm": 96,
                     "w_mm": 78,
                     "row_height_mm": 8,
                     "size_pt": 9,
@@ -548,7 +548,7 @@ def _minimal_dict() -> dict[str, Any]:
                 {
                     "type": "qso_rows",
                     "x_mm": 6,
-                    "y_mm": 80,
+                    "y_mm": 104,
                     "w_mm": 78,
                     "row_height_mm": 7.5,
                     "size_pt": 8.5,

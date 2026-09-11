@@ -301,3 +301,76 @@ def test_print_presets_and_descriptions() -> None:
     assert describe_preset_changes(home, "home") == ["与当前设置一致，无需调整。"]
     with pytest.raises(KeyError):
         apply_print_preset(home, "nope")
+
+
+# --------------------------------------------------------------------------
+# Table / footer geometry (regression: rows used to overlap the footer)
+# --------------------------------------------------------------------------
+
+MM_PER_PT = 25.4 / 72.0
+
+
+def test_table_rows_never_overlap_the_text_below_them() -> None:
+    """For a full 4-QSO card, the last table row must clear the next text."""
+    for name in ("classic", "minimal", "contest"):
+        template = builtin_template(name)
+        for face_name in ("front", "back"):
+            face = template.front if face_name == "front" else template.back
+            tables = [e for e in face.elements if e.type == "qso_rows"]
+            for table in tables:
+                boxes = 1 + 4 if table.header else 4  # header row + four QSOs
+                bottom = table.y_mm - (boxes - 1) * table.row_height_mm
+                below = [
+                    e for e in face.elements if e.type == "text" and e.y_mm + 0.01 < table.y_mm
+                ]
+                for element in below:
+                    top = element.y_mm + element.size_pt * MM_PER_PT * element.line_height
+                    assert bottom >= top, (
+                        f"{name}/{face_name}: table bottom {bottom:.1f} mm overlaps "
+                        f"{element.text[:24]!r} top {top:.1f} mm"
+                    )
+
+
+def test_four_qso_card_renders_every_row(tmp_path) -> None:
+    qsos = [
+        qso_from_fields(
+            {
+                "CALL": "JA1ABC",
+                "QSO_DATE": f"2026090{i + 1}",
+                "TIME_ON": f"{1200 + i:04d}",
+                "BAND": band,
+                "MODE": "SSB",
+                "RST_SENT": "59",
+                "RST_RCVD": "59",
+            }
+        )
+        for i, band in enumerate(("20m", "40m", "15m", "10m"))
+    ]
+    cards = plan_cards(qsos, group_by="call", max_per_card=4)
+    assert len(cards) == 1 and len(cards[0]) == 4
+    options = core_only_options(template=builtin_template("classic"))
+    result = CardRenderer(options).render(cards, tmp_path / "table.pdf")
+    assert not [w for w in result.warnings if "超出卡片范围" in w]
+    data = Path(result.path).read_bytes()
+    # Every QSO date and both header labels reached the page.
+    for day in ("2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04"):
+        assert day.encode() in data
+
+
+def test_overflowing_table_is_truncated_with_a_warning(tmp_path) -> None:
+    qsos = [
+        qso_from_fields(
+            {
+                "CALL": "JA1ABC",
+                "QSO_DATE": f"202609{i + 10:02d}",
+                "TIME_ON": "1200",
+                "BAND": "20m",
+                "MODE": "SSB",
+            }
+        )
+        for i in range(14)
+    ]
+    cards = plan_cards(qsos, group_by="call", max_per_card=14)
+    assert len(cards[0]) == 14
+    result = CardRenderer(core_only_options()).render(cards, tmp_path / "overflow.pdf")
+    assert any("超出卡片范围" in w for w in result.warnings), result.warnings

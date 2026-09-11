@@ -54,6 +54,19 @@ qslcard cards --template minimal --paper A4 --out out/cards.pdf
 
 ---
 
+## 输出示例
+
+下图是用默认参数直接生成的印刷文件（A4、卡片 90×140 mm、四边 3 mm 出血、2×2 拼版、双面）。
+可以看到裁切线、成品线，以及成品线内侧 3 mm 的校准线。
+
+| 正面（每页 4 张） | 背面（与正面套准） |
+| --- | --- |
+| ![正面拼版](docs/sample-sheet-front.png) | ![背面拼版](docs/sample-sheet-back.png) |
+
+完整示例文件：[docs/sample-cards.pdf](docs/sample-cards.pdf)（9 张卡片，A4 双面共 6 页）。
+
+---
+
 ## 打包为 Windows 可执行文件（GUI）
 
 程序以图形界面为主要使用方式，双击 exe 即可，不需要命令行。

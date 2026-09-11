@@ -412,8 +412,19 @@ class CardRenderer:
         pdf.cell(width, line_height, text, align=align)
 
     def _draw_rows(
-        self, pdf: Any, card: Card, element: Element, box: tuple[float, float, float, float]
+        self,
+        pdf: Any,
+        card: Card,
+        element: Element,
+        box: tuple[float, float, float, float],
+        placement: Placement,
     ) -> None:
+        """Draw the per-QSO table, never letting a row spill off the card.
+
+        Rows grow downward from the element's y; the footer text of a template
+        sits below that, so the number of rows must be bounded by the finished
+        card, not by the sheet.
+        """
         x0, y_top, width, _height = box
         fields = element.fields or ()
         if not fields:
@@ -422,6 +433,7 @@ class CardRenderer:
         column_width = width / columns
         row_height = element.row_height_mm
         size = element.size_pt
+        face_bottom = self.layout.sheet.height_mm - (placement.y_mm + self.template.card.bleed_mm)
         self._set_text(pdf, element.color)
         rows: list[list[str]] = []
         if element.header:
@@ -431,9 +443,10 @@ class CardRenderer:
             rows.append(
                 [render_text(format_field(name, context.get(name, "")), context) for name in fields]
             )
+        drawn = 0
         for index, values in enumerate(rows):
             y = y_top + index * row_height
-            if y + row_height > self.layout.sheet.height_mm:
+            if y + row_height > face_bottom + 0.05:
                 break
             for column, value in enumerate(values):
                 cell_x = x0 + column * column_width
@@ -443,8 +456,15 @@ class CardRenderer:
                 pdf.set_xy(cell_x, y)
                 align = "C" if element.header and index == 0 else "L"
                 pdf.cell(column_width, row_height, value, align=align)
+            drawn += 1
+        if drawn < len(rows):
+            note = (
+                f"通联表格超出卡片范围：已省略 {len(rows) - drawn} 行，"
+                "请减少每卡通联数或调小表格行高"
+            )
+            if note not in self.warnings:
+                self.warnings.append(note)
 
-    # -- marks ------------------------------------------------------------
     def _draw_guides(self, pdf: Any, placement: Placement) -> None:
         sheet_height = self.layout.sheet.height_mm
         bleed = self.template.card.bleed_mm
@@ -539,7 +559,7 @@ class CardRenderer:
             elif element.type == "image":
                 self._draw_image_element(pdf, element, placement)
             elif element.type == "qso_rows":
-                self._draw_rows(pdf, card, element, self._box(placement, element))
+                self._draw_rows(pdf, card, element, self._box(placement, element), placement)
 
     def _draw_image_element(self, pdf: Any, element: Element, placement: Placement) -> None:
         path = element.image
