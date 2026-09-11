@@ -327,19 +327,28 @@ def main(argv: list[str] | None = None) -> int:
         from .gui import run_gui
 
         return run_gui(app)
-    except Exception:  # noqa: BLE001 - windowed builds must never die silently
+    except Exception as exc:  # noqa: BLE001 - windowed builds must never die silently
         import traceback
 
         traceback.print_exc()
+        tcl_broken = type(exc).__name__ == "TclError" or "init.tcl" in str(exc)
+        detail = (
+            "本机的 Tk 图形环境不可用（Tcl/Tk 数据文件缺失）。\n"
+            "你仍然可以用命令行版本完成同样的工作：\n"
+            "  qslcard-cli import <ADIF 目录>\n"
+            "  qslcard-cli cards --out out/cards.pdf\n"
+            "  qslcard-cli cardlog stats\n"
+            if tcl_broken
+            else "程序启动时出错。\n"
+        )
         try:
             import tkinter.messagebox as mb
 
-            mb.showerror(
-                "启动失败",
-                "程序启动时出错，详情已写入日志：\n" + str(home / "qslcard.log"),
-            )
+            mb.showerror("启动失败", detail + "详情已写入日志：\n" + str(home / "qslcard.log"))
         except Exception:  # noqa: BLE001
-            pass
+            # No usable GUI at all: make sure the message reaches stdout/log.
+            print(detail)
+            print(f"error: {type(exc).__name__}: {exc}")
         return 1
 
 

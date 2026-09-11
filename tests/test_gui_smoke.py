@@ -24,7 +24,27 @@ from qslcard.privacy import EgressPolicy  # noqa: E402
 from qslcard.sources.base import SourceContext  # noqa: E402
 from qslcard.store import Store  # noqa: E402
 
-_ROOT: tk.Tk | None = None
+
+def _make_root() -> tk.Tk | None:
+    """Create the one root this module uses, or None when Tk cannot work.
+
+    tkinter can import while its Tcl data files are missing: GitHub's Windows
+    runner ships exactly such a Python, where tk.Tk() raises
+    "Can't find a usable init.tcl".  Creating and destroying extra roots also
+    makes Tcl intermittently refuse to start, so this single root is kept alive
+    for the whole module and shared by every test.
+    """
+    try:
+        candidate = tk.Tk()
+    except Exception:  # noqa: BLE001 - any Tcl/Tk problem means unusable
+        return None
+    candidate.withdraw()
+    return candidate
+
+
+_ROOT = _make_root()
+if _ROOT is None:  # pragma: no cover - depends on the host
+    pytest.skip("Tk is not usable in this environment", allow_module_level=True)
 
 
 @pytest.fixture(autouse=True)
@@ -58,14 +78,8 @@ class FakeApp:
 
 
 def root() -> tk.Tk:
-    """One hidden root, created once and reused by every test."""
-    global _ROOT
-    if _ROOT is None or not _ROOT.winfo_exists():
-        try:
-            _ROOT = tk.Tk()
-        except tk.TclError:  # pragma: no cover - depends on the host session
-            pytest.skip("no display available for Tk")
-        _ROOT.withdraw()
+    """The single hidden root created at import time."""
+    assert _ROOT is not None  # set at import; the module skips otherwise
     return _ROOT
 
 
